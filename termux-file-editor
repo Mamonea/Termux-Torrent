@@ -1,3 +1,4 @@
+#!/bin/bash
 #!/data/data/com.termux/files/usr/bin/bash
 # Project name : Termux-Torrent
 # Coded by: Khansaad1275 (You dont become a coder by just changing the credits)
@@ -16,42 +17,38 @@ echo -e "\e[032m" "   ██║   ╚██████╔╝██║  ██�
 echo -e "\e[032m" "   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝   "
 echo -e "\e[032m" "--------------------[LearnTermux.tech]-----------------------"
 echo " "
-# getting the latest file .torrent file
-cd downloads
+# getting the latest .torrent file
+cd ~/downloads || exit
 newf=$(ls -Art | tail -n 1)
 
-# file info
+# File info
 echo " "
-echo -e "\e[032m" "Downloading : ${newf}"
+echo -e "\e[032mDownloading: ${newf}\e[0m"
 echo " "
-echo "To Quit press ctrl + C Then Enter."
+echo "To quit, press ctrl + C and then Enter."
 
+aria2c --dht-listen-port=6881-6999 --file-allocation=prealloc --max-upload-limit=50K -x 10 --seed-time=0 -d /data/data/com.termux/files/home/storage/shared/Torrent-Downloads "/data/data/com.termux/files/home/downloads/${newf}"
 
-aria2c --seed-time=0 -d /data/data/com.termux/files/home/storage/shared/Torrent-Downloads "/data/data/com.termux/files/home/downloads/${newf}"
+# Delete the .torrent file
+rm -rf "/data/data/com.termux/files/home/downloads/${newf}"
 
-rm -rf /data/data/com.termux/files/home/downloads/*
-
-# Quit Menu
+# Quit menu
 echo " "
-echo -e '\033[1m[Enter]Press Enter to Quit!"\033[0m'
+echo -e '\033[1m[Enter] Press Enter to quit!\033[0m'
 echo " "
-echo -e "\e[031m" "1. Delete all the data in Torrent-Downloads folder."
-read bxx                                                             
+echo -e "\e[031m1. Delete all the data in Torrent-Downloads folder.\e[0m"
+read -r bxx
 
 case $bxx in
-
-	1) echo -e "\e[031m" "Are you sure you want to Delete all the data in Torrent-Downloads folder(Y/n)"
-	
-	read xconf
-
-	if [ "$xconf" != "${xconf#[Yy]}" ] ; then
-		echo " Deleting all the data in the Torrent-Downloads folder..."
-		cd /data/data/com.termux/files/home/storage/shared/Torrent-Downloads
-		rm - rf *
-		cd
-	else
-		echo "Quiting the Menu.."
-
-	fi
-	;;
+    1)
+        echo -e "\e[031mAre you sure you want to delete all the data in the Torrent-Downloads folder? (Y/n)\e[0m"
+        read -r xconf
+        if [ "$xconf" = "Y" ] || [ "$xconf" = "y" ]; then
+            echo "Deleting all the data in the Torrent-Downloads folder..."
+            cd /data/data/com.termux/files/home/storage/shared/Torrent-Downloads || exit
+            rm -rf *
+        else
+            echo "Quitting the menu.."
+        fi
+        ;;
 esac
